@@ -1,5 +1,10 @@
+import os
 import streamlit as st
 import yt_dlp
+import imageio_ffmpeg as ffmpeg
+
+# Ensure yt-dlp knows where to find ffmpeg
+os.environ["PATH"] += os.pathsep + os.path.dirname(ffmpeg.get_ffmpeg_exe())
 
 st.title("YouTube Video Downloader")
 video_url = st.text_input("YouTube Video URL", "")
