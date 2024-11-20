@@ -14,6 +14,11 @@ def sanitize_filename(filename):
     filename = re.sub(r'\s+', '_', filename)  # Replace spaces with underscores
     return filename
 
+# Ensure the output directory exists
+output_dir = 'downloads'
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
+
 st.title("YouTube Video Downloader")
 video_url = st.text_input("YouTube Video URL", "")
 
@@ -24,7 +29,7 @@ if video_url:
         # Configure yt-dlp to use the ffmpeg path directly and sanitize filename
         ydl_opts = {
             'format': 'bestvideo+bestaudio/best',
-            'outtmpl': '%(title)s.%(ext)s',  # Save with video title as the filename
+            'outtmpl': os.path.join(output_dir, '%(title)s.%(ext)s'),  # Save in 'downloads' folder
             'ffmpeg_location': ffmpeg_path,  # Set ffmpeg location directly here
             'postprocessors': [
                 {
@@ -41,12 +46,12 @@ if video_url:
             st.write(f"**Views:** {info['view_count']}")
 
             # Update the filename with sanitized title
-            ydl_opts['outtmpl'] = f"{sanitized_title}.%(ext)s"
+            ydl_opts['outtmpl'] = os.path.join(output_dir, f"{sanitized_title}.%(ext)s")
 
             # Download video on button click
             if st.button("Download Video"):
                 with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                     ydl.download([video_url])
-                st.success("Download completed!")
+                st.success(f"Download completed! Check the '{output_dir}' folder.")
     except Exception as e:
         st.error(f"An error occurred: {e}")
