@@ -3,8 +3,8 @@ import streamlit as st
 import yt_dlp
 import imageio_ffmpeg as ffmpeg
 
-# Ensure yt-dlp knows where to find ffmpeg
-os.environ["PATH"] += os.pathsep + os.path.dirname(ffmpeg.get_ffmpeg_exe())
+# Get the path to the ffmpeg binary from imageio-ffmpeg
+ffmpeg_path = ffmpeg.get_ffmpeg_exe()
 
 st.title("YouTube Video Downloader")
 video_url = st.text_input("YouTube Video URL", "")
@@ -13,10 +13,17 @@ if video_url:
     try:
         st.write("Processing video...")
 
-        # Configure yt-dlp
+        # Configure yt-dlp to use the ffmpeg path
         ydl_opts = {
             'format': 'bestvideo+bestaudio/best',
             'outtmpl': '%(title)s.%(ext)s',  # Save with video title as the filename
+            'postprocessors': [
+                {
+                    'key': 'FFmpegVideoConvertor',
+                    'prefer_ffmpeg': True,
+                    'ffmpeg_location': ffmpeg_path,  # Explicitly set ffmpeg path
+                }
+            ],
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
