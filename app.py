@@ -26,6 +26,8 @@ if video_url:
     try:
         st.write("Processing video...")
 
+
+        
         # Configure yt-dlp to use the ffmpeg path directly and sanitize filename
         ydl_opts = {
             'format': 'bestvideo+bestaudio/best',
@@ -34,6 +36,7 @@ if video_url:
             'postprocessors': [
                 {
                     'key': 'FFmpegMerger',  # Merge video and audio
+                    'prefferedformat' : 'mp4',
                 }
             ],
         }
