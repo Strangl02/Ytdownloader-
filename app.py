@@ -13,14 +13,14 @@ if video_url:
     try:
         st.write("Processing video...")
 
-        # Configure yt-dlp to use the ffmpeg path
+        # Configure yt-dlp to use the ffmpeg path directly
         ydl_opts = {
             'format': 'bestvideo+bestaudio/best',
             'outtmpl': '%(title)s.%(ext)s',  # Save with video title as the filename
+            'ffmpeg_location': ffmpeg_path,  # Set ffmpeg location directly here
             'postprocessors': [
                 {
-                    'key': 'FFmpegMerger',
-                    'ffmpeg_location': ffmpeg_path,  # Explicitly set ffmpeg path
+                    'key': 'FFmpegMerger',  # Merge video and audio
                 }
             ],
         }
