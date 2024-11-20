@@ -1,18 +1,10 @@
 import os
-import re
-import streamlit as st
 import yt_dlp
 import imageio_ffmpeg as ffmpeg
+import streamlit as st
 
 # Get the path to the ffmpeg binary from imageio-ffmpeg
 ffmpeg_path = ffmpeg.get_ffmpeg_exe()
-
-# Function to sanitize the filename
-def sanitize_filename(filename):
-    # Remove any special characters and replace with underscore
-    filename = re.sub(r'[<>:"/\\|?*]', '_', filename)  # Remove invalid characters
-    filename = re.sub(r'\s+', '_', filename)  # Replace spaces with underscores
-    return filename
 
 # Ensure the output directory exists
 output_dir = 'downloads'
@@ -26,19 +18,12 @@ if video_url:
     try:
         st.write("Processing video...")
 
-
-        
         # Configure yt-dlp to use the ffmpeg path directly and sanitize filename
         ydl_opts = {
-            'format': 'bestvideo+bestaudio/best',
-            'outtmpl': os.path.join(output_dir, '%(title)s.%(ext)s'),  # Save in 'downloads' folder
+            'format': 'bestvideo+bestaudio/best',  # Best video and audio streams
+            'outtmpl': os.path.join(output_dir, '%(title)s.%(ext)s'),  # Save to 'downloads' folder
             'ffmpeg_location': ffmpeg_path,  # Set ffmpeg location directly here
-            'postprocessors': [
-                {
-                    'key': 'FFmpegMerger',  # Merge video and audio
-                    'prefferedformat' : 'mp4',
-                }
-            ],
+            'merge_output_format': 'mp4',  # Directly merge to mp4 instead of webm
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
