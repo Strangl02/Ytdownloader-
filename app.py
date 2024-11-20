@@ -20,10 +20,10 @@ if video_url:
 
         # Configure yt-dlp to use the ffmpeg path directly and sanitize filename
         ydl_opts = {
-            'format': 'bestvideo+bestaudio/best',  # Best video and audio streams
+            'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4',  # Download best video and audio in mp4/m4a
             'outtmpl': os.path.join(output_dir, '%(title)s.%(ext)s'),  # Save to 'downloads' folder
             'ffmpeg_location': ffmpeg_path,  # Set ffmpeg location directly here
-            'merge_output_format': 'mp4',  # Directly merge to mp4 instead of webm
+            'merge_output_format': 'mp4',  # Force merging into .mp4 if needed
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
