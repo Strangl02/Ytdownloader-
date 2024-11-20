@@ -19,8 +19,7 @@ if video_url:
             'outtmpl': '%(title)s.%(ext)s',  # Save with video title as the filename
             'postprocessors': [
                 {
-                    'key': 'FFmpegVideoConvertor',
-                    'prefer_ffmpeg': True,
+                    'key': 'FFmpegMerger',
                     'ffmpeg_location': ffmpeg_path,  # Explicitly set ffmpeg path
                 }
             ],
